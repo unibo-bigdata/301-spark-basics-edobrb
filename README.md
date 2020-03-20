@@ -65,14 +65,15 @@ Reproduce on Spark the exercises done on Hadoop MapReduce on the capra and divin
 - Jobs:
   - Count the number of occurrences of each word
     - Result: (sopra, 1), (la, 4), …
-    `rddDC.flatMap(_.split(' ')).filter(!_.isEmpty).filter(p => p != ",").map(_.toLowerCase).map(v => (v, 1)).reduceByKey(_+_).sortBy(_._2, false).collect`
+    ```rddDC.flatMap(_.split(' ')).filter(!_.isEmpty).filter(p => p != ",").map(_.toLowerCase).map(v => (v, 1)).reduceByKey(_+_).sortBy(_._2, false).collect```
   - Count the number of occurrences of words of given lengths
     - Result: (2, 4), (5, 8)
-    `flatMap(_.split(' ')).filter(!_.isEmpty).filter(p => p != ",").map(_.toLowerCase).map(v => (v.length, 1)).reduceByKey(_+_).sortBy(_._2, false).collect`
+    ```rddDC.flatMap(_.split(' ')).filter(!_.isEmpty).filter(p => p != ",").map(_.toLowerCase).map(v => (v.length, 1)).reduceByKey(_+_).sortBy(_._2, false).collect```
   - Count the average length of words given their first letter (hint: check the example in 301-1)
     - Result: (s, 5), (l, 2), …
-    `rddDC.flatMap(_.split(' ')).filter(!_.isEmpty).filter(p => p != ",").map(_.toLowerCase).map(v => (v.substring(0,1), 1)).reduceByKey(_+_).sortBy(_._2, false).collect`
+    ```rddDC.flatMap(_.split(' ')).filter(!_.isEmpty).filter(p => p != ",").map(_.toLowerCase).map(v => (v.substring(0,1), 1)).reduceByKey(_+_).sortBy(_._2, false).collect```
   - Return the inverted index of words
-    - Result: (sopra, (0)), (la, (0, 1)), …
+    - Result: (sopra, (0)), (la, (0, 1)), … 
+    ```rddDC.zipWithIndex.map(v => (v._1.split(' ').filter(!_.isEmpty).filter(p => p != ","), v._2)).flatMap(v => v._1.map(a => (a,v._2))).groupByKey.sortBy(_._2.size, false).collect```
 - How does Spark compare with respect to MapReduce? (performance, ease of use)
 - How is the output sorted? How can you sort by value?
